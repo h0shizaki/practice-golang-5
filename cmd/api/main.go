@@ -1,6 +1,8 @@
 package main
 
 import (
+	"context"
+	"database/sql"
 	"flag"
 	"fmt"
 	"log"
@@ -9,12 +11,16 @@ import (
 	"time"
 
 	"github.com/joho/godotenv"
+	_ "github.com/lib/pq"
 )
 
 type Config struct {
 	Port        string
 	Version     string
 	Environment string
+	db          struct {
+		dsn string
+	}
 }
 
 type Application struct {
@@ -37,6 +43,7 @@ func main() {
 	flag.StringVar(&config.Port, "port", envs["PORT"], "Server port")
 	flag.StringVar(&config.Version, "version", "1.0", "Program version")
 	flag.StringVar(&config.Environment, "environment", "Development", "Server environment")
+	flag.StringVar(&config.db.dsn, "database", envs["DB"], "Server database")
 	flag.Parse()
 
 	//setting application
@@ -44,6 +51,15 @@ func main() {
 		Config: config,
 		Logger: log.New(os.Stdout, "", log.Ldate|log.Ltime),
 	}
+
+	//Connecting to database
+	db, err := openDB(config)
+
+	if err != nil {
+		log.Fatal("Error:", err)
+	}
+
+	defer db.Close()
 
 	//Connecting to route and serve
 	srv := http.Server{
@@ -61,5 +77,29 @@ func main() {
 	if err != nil {
 		log.Fatal("Error:", err)
 	}
+
+}
+
+// Function that create a connection to database
+
+func openDB(cfg Config) (*sql.DB, error) {
+
+	db, err := sql.Open("postgres", cfg.db.dsn)
+
+	if err != nil {
+		return nil, err
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	err = db.PingContext(ctx)
+
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Println("DB connected")
+	return db, nil
 
 }
