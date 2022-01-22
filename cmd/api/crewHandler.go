@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 )
 
@@ -13,12 +12,10 @@ func (app *Application) getAllCrew(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println(crews)
-	// err = app.writeJSON(w, 200, crews, "crewlist")
+	err = app.writeJSON(w, http.StatusOK, crews, "crew_list")
 
 	if err != nil {
 		app.writeError(w, err)
 		return
 	}
-
 }

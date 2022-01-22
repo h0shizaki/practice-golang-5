@@ -48,12 +48,6 @@ func main() {
 	flag.StringVar(&config.db.dsn, "database", envs["DB"], "Server database")
 	flag.Parse()
 
-	//setting application
-	app := Application{
-		Config: config,
-		Logger: log.New(os.Stdout, "", log.Ldate|log.Ltime),
-	}
-
 	//Connecting to database
 	db, err := openDB(config)
 
@@ -62,6 +56,13 @@ func main() {
 	}
 
 	defer db.Close()
+
+	//setting application
+	app := Application{
+		Config: config,
+		Logger: log.New(os.Stdout, "", log.Ldate|log.Ltime),
+		Models: models.NewModels(db),
+	}
 
 	//Connecting to route and serve
 	srv := http.Server{

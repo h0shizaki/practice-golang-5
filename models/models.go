@@ -5,10 +5,6 @@ import (
 	"time"
 )
 
-type DBModel struct {
-	DB *sql.DB
-}
-
 type Models struct {
 	DB DBModel
 }
@@ -19,27 +15,31 @@ func NewModels(db *sql.DB) Models {
 	}
 }
 
+type DBModel struct {
+	DB *sql.DB
+}
+
 //Create models here
 
 type Crew struct {
 	ID         int       `json:"id"`
-	NAME       string    `json:"name"`
-	BIRTH_DATE time.Time `json:"birth_date"`
+	Name       string    `json:"name"`
+	Birth_date time.Time `json:"birth_date"`
 }
 
 type Operation struct {
 	ID      int    `json:"id"`
-	OP_NAME string `json:"operation_name"`
+	Op_name string `json:"operation_name"`
 }
 
 type CrewOperation struct {
 	ID             int            `json:"id"`
-	CREW_ID        int            `json:"crew_id"`
-	CREW_LIST      map[int]string `json:"crew"`
-	CREW_SIZE      int            `json:"crew_size"`
-	OPERATION_ID   int            `json:"-"`
-	OPERATION_NAME string         `json:"operation_name"`
-	ROCKET         string         `json:"rocket"`
-	LAUNCH_SITE    string         `json:"launch_site"`
-	LAUNCH_DATE    time.Time      `json:"launch_date"`
+	Crew_id        int            `json:"crew_id"`
+	Crew_list      map[int]string `json:"crew"`
+	Crew_size      int            `json:"crew_size"`
+	Operation_id   int            `json:"-"`
+	Operation_name string         `json:"operation_name"`
+	Rocket         string         `json:"rocket"`
+	Launch_site    string         `json:"launch_site"`
+	Launch_date    time.Time      `json:"launch_date"`
 }

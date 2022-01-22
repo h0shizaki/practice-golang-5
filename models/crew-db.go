@@ -6,10 +6,11 @@ import (
 )
 
 func (m *DBModel) GetAllCrew() ([]*Crew, error) {
+
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	query := `SELECT * FROM crew ORDER BY id ; `
+	query := `SELECT * FROM crew ;`
 
 	rows, err := m.DB.QueryContext(ctx, query)
 
@@ -17,25 +18,25 @@ func (m *DBModel) GetAllCrew() ([]*Crew, error) {
 		return nil, err
 	}
 
-	defer rows.Close()
-
-	var allCrews []*Crew
+	var crews []*Crew
 
 	for rows.Next() {
+
 		var crew Crew
+
 		err := rows.Scan(
 			&crew.ID,
-			&crew.NAME,
-			&crew.BIRTH_DATE,
+			&crew.Name,
+			&crew.Birth_date,
 		)
 
 		if err != nil {
 			return nil, err
 		}
 
-		allCrews = append(allCrews, &crew)
+		crews = append(crews, &crew)
 
 	}
 
-	return allCrews, nil
+	return crews, nil
 }
