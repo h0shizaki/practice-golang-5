@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"server/models"
 	"time"
 
 	"github.com/joho/godotenv"
@@ -26,6 +27,7 @@ type Config struct {
 type Application struct {
 	Config Config
 	Logger *log.Logger
+	Models models.Models
 }
 
 func main() {
