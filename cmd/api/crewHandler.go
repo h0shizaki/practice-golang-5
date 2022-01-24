@@ -105,3 +105,67 @@ func (app *Application) addCrew(w http.ResponseWriter, r *http.Request) {
 	}
 
 }
+
+func (app *Application) deleteCrew(w http.ResponseWriter, r *http.Request) {
+	params := r.Context().Value("params").(httprouter.Params)
+
+	id, err := strconv.Atoi(params.ByName("id"))
+
+	if err != nil {
+		app.writeError(w, err)
+		return
+	}
+
+	err = app.Models.DB.DeleteCrew(id)
+
+	ok := jsonResponse{
+		OK: true,
+	}
+
+	err = app.writeJSON(w, http.StatusOK, ok, "response")
+	if err != nil {
+		app.writeError(w, err)
+		return
+	}
+
+}
+
+//Update crew
+
+func (app *Application) editCrew(w http.ResponseWriter, r *http.Request) {
+
+	var payload crewPayload
+
+	err := json.NewDecoder(r.Body).Decode(&payload)
+
+	if err != nil {
+		app.Logger.Println(err)
+		app.writeError(w, err)
+		return
+	}
+
+	var crew models.Crew
+
+	crew.ID, _ = strconv.Atoi(payload.ID)
+	crew.Name = payload.Name
+	crew.Birth_date, _ = time.Parse("2006-01-02", payload.Birth_date)
+
+	err = app.Models.DB.UpdateCrew(crew)
+
+	if err != nil {
+		app.writeError(w, err)
+		return
+	}
+
+	ok := jsonResponse{
+		OK: true,
+	}
+
+	err = app.writeJSON(w, http.StatusOK, ok, "response")
+
+	if err != nil {
+		app.writeError(w, err)
+		return
+	}
+
+}

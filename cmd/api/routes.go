@@ -16,6 +16,9 @@ func (app *Application) routes() http.Handler {
 	router.HandlerFunc(http.MethodGet, "/v1/api/crewlist", app.getAllCrew)
 	router.HandlerFunc(http.MethodGet, "/v1/api/crewlist/:id", app.getOneCrew)
 
+	//Delete crew
+	router.HandlerFunc(http.MethodGet, "/v1/api/delete/crew/:id", app.deleteCrew)
+
 	//Post method insert
 	router.HandlerFunc(http.MethodPost, "/v1/api/addcrew", app.addCrew)
 
