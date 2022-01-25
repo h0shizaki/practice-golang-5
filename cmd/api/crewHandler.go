@@ -66,7 +66,7 @@ type crewPayload struct {
 	Birth_date string `json:"birth_date"`
 }
 
-func (app *Application) addCrew(w http.ResponseWriter, r *http.Request) {
+func (app *Application) insertCrew(w http.ResponseWriter, r *http.Request) {
 
 	var payload crewPayload
 
@@ -107,9 +107,8 @@ func (app *Application) addCrew(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *Application) deleteCrew(w http.ResponseWriter, r *http.Request) {
-	params := r.Context().Value("params").(httprouter.Params)
-
-	id, err := strconv.Atoi(params.ByName("id"))
+	param := httprouter.ParamsFromContext(r.Context())
+	id, err := strconv.Atoi(param.ByName("id"))
 
 	if err != nil {
 		app.writeError(w, err)
@@ -117,6 +116,11 @@ func (app *Application) deleteCrew(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = app.Models.DB.DeleteCrew(id)
+
+	if err != nil {
+		app.writeError(w, err)
+		return
+	}
 
 	ok := jsonResponse{
 		OK: true,
