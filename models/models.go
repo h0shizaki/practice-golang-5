@@ -32,13 +32,12 @@ type Operation struct {
 	Op_name string `json:"operation_name"`
 }
 
-type CrewOperation struct {
-	ID             int            `json:"id"`
-	Crew_id        int            `json:"crew_id"`
-	Crew_list      map[int]string `json:"crew"`
-	Crew_size      int            `json:"crew_size"`
-	Operation_id   int            `json:"-"`
+type Mission struct {
+	ID             int            `json:"-"`
 	Operation_name string         `json:"operation_name"`
+	Operation_id   int            `json:"-"`
+	Crew_size      int            `json:"crew_size"`
+	Crew_list      map[int]string `json:"crew"`
 	Rocket         string         `json:"rocket"`
 	Launch_site    string         `json:"launch_site"`
 	Launch_date    time.Time      `json:"launch_date"`
