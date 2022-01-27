@@ -71,3 +71,44 @@ func (m *DBModel) GetAllMission() ([]*Mission, error) {
 	return missions, nil
 
 }
+
+func (m *DBModel) InsertMission(mission Mission) error {
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	stmt := `INSERT INTO mission(op_id,crew_size,rocket,launch_site,launch_date) VALUES(
+		$1,$2,$3,$4,$5
+		) ;
+	`
+
+	_, err := m.DB.ExecContext(ctx, stmt,
+		mission.Operation_id,
+		mission.Crew_size,
+		mission.Rocket,
+		mission.Launch_site,
+		mission.Launch_date,
+	)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+
+}
+
+func (m *DBModel) DeleteMission(id int) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	stmt := `DELETE FROM mission WHERE id = $1`
+
+	_, err := m.DB.QueryContext(ctx, stmt, id)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
