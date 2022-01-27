@@ -36,5 +36,5 @@ func (app *Application) routes() http.Handler {
 	//Put
 	router.HandlerFunc(http.MethodPut, "/v1/api/update/crew", app.editCrew)
 
-	return router
+	return app.enableCORS(router)
 }
